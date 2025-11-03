@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart JobLink Demo</title>
+<style>
+:root {
+  --primary: #005f73;
+  --accent: #ee6c4d;
+  --light-bg: #f0f4f8;
+  --dark-bg: #0a1f2b;
+  --text-dark: #1c1c1c;
+  --text-light: #ffffff;
+  --card-bg: #ffffff;
+  --shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+body { font-family: 'Poppins', sans-serif; background: var(--light-bg); color: var(--text-dark); margin:0; transition:0.3s; }
+body.dark-mode { background: var(--dark-bg); color: var(--text-light); }
+
+/* NAVBAR */
+nav {
+  background: var(--primary); color: white;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 15px 30px; position: sticky; top:0; z-index:100; box-shadow: var(--shadow);
+}
+nav h1 { font-size: 24px; }
+.nav-buttons button {
+  background: var(--accent); color:white; border:none; padding:10px 20px;
+  margin-left:10px; border-radius:25px; cursor:pointer; transition:0.3s;
+}
+.nav-buttons button:hover { background:white; color: var(--primary); }
+
+/* HERO */
+.hero { text-align:center; padding:80px 20px; background: linear-gradient(135deg, var(--primary), var(--accent)); color:white;}
+.hero h2 { font-size:36px; margin-bottom:15px;}
+.hero button {
+  background:white; color: var(--primary); border:none; padding:14px 30px; border-radius:30px; cursor:pointer;
+  font-weight:bold; transition:0.3s;
+}
+.hero button:hover { background: var(--accent); color:white; transform: translateY(-3px); }
+
+/* ANALYZER */
+.analyzer { background: var(--card-bg); max-width:600px; margin:50px auto; padding:30px; border-radius:12px; box-shadow:var(--shadow);}
+body.dark-mode .analyzer { background:#1b263b; color:white; }
+.analyzer input, .analyzer button { width:100%; margin:10px 0; padding:12px; border-radius:8px; border:1px solid #ccc; }
+.analyzer button.submit-btn { background: var(--primary); color:white; border:none; cursor:pointer; border-radius:25px; font-weight:bold; }
+.analyzer button.submit-btn:hover { background: var(--accent); transform:translateY(-2px); }
+
+/* FEATURES */
+.features { display:flex; flex-wrap:wrap; justify-content:center; padding:50px 20px; }
+.feature-card { flex:1 1 250px; background:white; margin:15px; padding:20px; border-radius:10px; box-shadow: var(--shadow);}
+.feature-card h4 { color: var(--primary); margin-bottom:10px; }
+.feature-card:hover { transform: translateY(-5px); }
+
+/* FOOTER */
+footer { background: var(--primary); color:white; text-align:center; padding:30px 20px; }
+footer .footer-buttons button {
+  background: var(--accent); color:white; border:none; padding:10px 20px; margin:5px;
+  border-radius:25px; cursor:pointer; transition:0.3s;
+}
+footer .footer-buttons button:hover { background:white; color:var(--primary); }
+
+#result { margin-top:15px; background:#f1f5f9; padding:15px; border-radius:10px; border:1px solid #ddd; font-size:14px;}
+body.dark-mode #result { background:#1e293b; border-color:#334155; }
+
+@media(max-width:700px){ .hero h2{font-size:28px;} nav{flex-direction:column;} .nav-buttons{margin-top:10px;} }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <h1>Smart JobLink</h1>
+  <div class="nav-buttons">
+    <button onclick="login()">Login</button>
+    <button onclick="logout()">Logout</button>
+    <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h2>AI-Powered Resume Matching</h2>
+  <p>Upload your resume, analyze ATS fit, and get recommended jobs instantly.</p>
+  <button onclick="document.getElementById('analyzer').scrollIntoView({behavior:'smooth'})">Analyze Resume</button>
+</section>
+
+<!-- ANALYZER -->
+<section class="analyzer" id="analyzer">
+  <h3>Upload Your Resume</h3>
+  <form id="resumeForm" enctype="multipart/form-data" method="POST" action="upload.php">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Your Email" required>
+    <input type="file" name="resume" accept=".pdf,.txt" required>
+    <button type="submit" class="submit-btn">Upload & Analyze</button>
+  </form>
+  <div id="result"></div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="feature-card"><h4>Smart Resume Analysis</h4><p>Get ATS compatibility score and optimization tips.</p></div>
+  <div class="feature-card"><h4>Recruiter Dashboard</h4><p>Rank candidates and automate screening.</p></div>
+  <div class="feature-card"><h4>AI Job Matching</h4><p>Receive personalized job recommendations.</p></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Smart JobLink</p>
+  <div class="footer-buttons">
+    <button onclick="login()">Login</button>
+    <button onclick="logout()">Logout</button>
+    <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+  </div>
+  <p>support@smartjoblink.com | +91 98765 43210</p>
+</footer>
+
+<script>
+// DARK MODE
+function toggleDarkMode(){
+  document.body.classList.toggle('dark-mode');
+  localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+window.onload = () => { if(localStorage.getItem('darkMode')==='true'){ document.body.classList.add('dark-mode'); } }
+
+// LOGIN / LOGOUT DEMO
+function login(){ alert("Login feature coming soon!"); }
+function logout(){ alert("Logged out successfully!"); }
+
+// AJAX FILE UPLOAD
+document.getElementById('resumeForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const formData = new FormData(this);
+  fetch('upload.php',{method:'POST',body:formData})
+  .then(res => res.text())
+  .then(data => { document.getElementById('result').innerHTML = data; })
+  .catch(()=>{ document.getElementById('result').innerHTML = "❌ Error uploading file."; });
+});
+</script>
+</body>
+</html>

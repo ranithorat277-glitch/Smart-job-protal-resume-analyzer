@@ -1,0 +1,24 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_FILES['resume']) && $_FILES['resume']['error'] === 0) {
+        $uploadDir = 'uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $filename = basename($_FILES['resume']['name']);
+        $targetFile = $uploadDir . time() . '_' . $filename;
+
+        if (move_uploaded_file($_FILES['resume']['tmp_name'], $targetFile)) {
+            echo "<p>✅ File uploaded successfully!</p>";
+            echo "<p>Saved as: $targetFile</p>";
+        } else {
+            echo "<p style='color:red;'>❌ Error moving uploaded file.</p>";
+        }
+    } else {
+        echo "<p style='color:red;'>❌ No file selected or upload error.</p>";
+    }
+} else {
+    echo "<p style='color:red;'>❌ Invalid request.</p>";
+}
+?>
